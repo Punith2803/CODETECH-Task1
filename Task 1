@@ -1,0 +1,29 @@
+//for temperature and humidity to display at your mobile phone using bluetooth in ESP32 microcontroller//
+
+#include <BluetoothSerial.h> 
+#include "DHT.h"
+#define dhtPin 2
+#define DHTTYPE DHT11
+DHT dht(dhtPin, DHTTYPE); 
+BluetoothSerial SerialBT;
+void setup() { 
+Serial.begin(115200);
+SerialBT.begin("ESP32_BT_Server"); 
+dht.begin();
+}
+void loop() {
+float temperature = dht.readTemperature(); 
+float humidity = dht.readHumidity(); 
+if (isnan(temperature) || isnan(humidity)) { 
+Serial.println("Failed to read from DHT sensor!"); 
+SerialBT.println("Failed to read from DHT sensor!"); 
+return;
+}
+SerialBT.print("Temperature: ");
+SerialBT.print(temperature); 
+SerialBT.print(" °C\t"); 
+SerialBT.print("Humidity: "); 
+SerialBT.print(humidity); 
+SerialBT.println(" %"); 
+delay(2000);
+}
